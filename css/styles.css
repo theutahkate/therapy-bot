@@ -1,0 +1,44 @@
+body {
+	box-sizing: border-box;
+	font-size: 100%;
+	width: 90%;
+	margin: 2rem auto;
+}
+
+.subhead {
+	display: block;
+	font-size: 1.5rem;
+}
+
+.chat__form {
+	margin: 2rem 0;
+	padding: 1rem 0 1rem .5rem;
+	border-top: 2px solid #2F4F4F;
+	border-bottom: 2px solid #2F4F4F;
+}
+
+.input {
+	padding: .5rem;
+}
+
+.chat__container {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	border: 1px solid #2F4F4F;
+}
+
+.chat__pane {
+	width: calc(50% - 1rem);
+	height: 100vh;
+	padding: 1rem;
+}
+
+.patient__pane {
+	background-color: rgba(102, 120, 222, .25);
+	border-right: 1px solid #2F4F4F;
+}
+
+.therapist__pane {
+	background-color: rgba(112, 128, 144, .25);
+}
