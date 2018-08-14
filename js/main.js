@@ -1,26 +1,32 @@
 const therapist = document.querySelector('.therapist__pane'),
 	patient = document.querySelector('.patient__pane'),
-	patientInput = document.getElementById('chatInput'),
 	patientSubmit = document.getElementById('chatSubmit');
-var messageCount = 0;
-var keyStrokes = 0;
+var patientInput = document.getElementById('chatInput'),
+	messageCount = 0,
+	keyStrokes = 0;
 
 (function greeting() {
 	therapist.innerHTML = '<p>Good Afternoon. How do you feel today?';
 })();
 
-function preParse(message) {
-	messageCount++;
-	messageCount >= 7 ? patientInput.addEventListener('keyup', countKeysAndBeRude) : therapistResponse();
-}
-
 function countKeysAndBeRude() {
-	if (keyStrokes > 20) {
+	if (keyStrokes > 10) {
 		postBuilder(therapist, "I'm afraid that's all the time we have for today.");
-		patientInput.setAttribute("disabled", "true")
+		patientInput.setAttribute("disabled", "true");
+		patientSubmit.setAttribute("disabled", "true");
 	} else {
 		keyStrokes++;
 	}
+}
+
+function angerParser() {
+	console.log(patientInput.value)
+	let angerResponses = [
+		"You seem angry.",
+		"Please calm down.",
+		"I can see that you're upset."
+	]
+	postBuilder(therapist, angerResponses[Math.floor(Math.random()*angerResponses.length)]);
 }
 
 function postBuilder(speaker, post) {
@@ -41,29 +47,38 @@ function unnecessaryDiscomfort() {
 	}, 1000);
 }
 
-function therapistResponse() {
-	setTimeout(function() {
-		let responses = [
+function generalResponse() {
+	let responses = [
 			"How does that make you feel?",
 			`What I hear you saying is "${patientInput.value}"`,
 			"I'm not sure that's healthy",
 			"Have you considered just not feeling that way?",
 			unnecessaryDiscomfort
 		];
-		let i = Math.floor(Math.random()*responses.length)
-		console.log(i)
+	let i = Math.floor(Math.random()*responses.length)
+	var response = (i == 4)? responses[4]() : responses[i];
+	postBuilder(therapist, response);
+}
 
-		if (i == 4) {
-			var randResponse = responses[4]()
-		} else {
-			var randResponse = `${responses[i]}`
+function responserator() {
+	var responseObject= {
+		rude: messageCount > 7 ? patientInput.addEventListener('keyup', countKeysAndBeRude) : null,
+		anger: patientInput.value == patientInput.value.toUpperCase() ? angerParser : null,
+		randResponse: generalResponse
+	};
+	for (var key of Object.keys(responseObject)) {
+		if (responseObject[key] != null) {
+			responseObject[key]();
 		}
-		postBuilder(therapist, randResponse);
-	}, 1000);
+	}
 }
 
 patientSubmit.addEventListener('click', function() {
 	event.preventDefault();
-	postBuilder(patient, patientInput.value)
-	preParse(patientInput.value);
+	postBuilder(patient, patientInput.value);
+	messageCount++;
+	console.log(messageCount);
+	setTimeout(function() {
+		responserator()
+	}, 1000);
 })
