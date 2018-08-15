@@ -11,8 +11,9 @@ var messageCount = 0,
 
 function countKeysAndBeRude() {
 	patientInput.addEventListener('keyup', function() {
-		if (keyStrokes > 3) {
-			postBuilder(therapist, "I'm afraid that's all the time we have for today.");
+		if (keyStrokes > 10) {
+			document.querySelector('.chat__container').innerHTML = "<p>I'm afraid that's all the time we have for today.</p>";
+			document.querySelector('.chat__container').setAttribute("class", "game-over");
 			patientInput.setAttribute("disabled", "true");
 			patientSubmit.setAttribute("disabled", "true");
 		} else {
@@ -21,20 +22,35 @@ function countKeysAndBeRude() {
 	})
 }
 
-function angerParser() {
-	console.log(patientInput.value)
-	let angerResponses = [
+function sadParser() {
+	imgBuilder('https://media1.tenor.com/images/3ea03e2ba19c1dcd5d5cff888501f442/tenor.gif?itemid=10268918', 'gif of Billy Crystal offering a box of tissue')
+}
+
+function angryParser() {
+	postBuilder(therapist, "So like...?");
+	imgBuilder('http://gifimage.net/wp-content/uploads/2017/09/annoyed-cat-gif-6.gif', 'gif of a grumpy cat blowing up a mansion');
+}
+
+function yellParser() {
+	let yellResponses = [
 		"You seem angry.",
 		"Please calm down.",
 		"I can see that you're upset."
 	]
-	postBuilder(therapist, angerResponses[Math.floor(Math.random()*angerResponses.length)]);
+	postBuilder(therapist, yellResponses[Math.floor(Math.random()*yellResponses.length)]);
 }
 
 function postBuilder(speaker, post) {
 	var pg = document.createElement('p');
 	pg.innerText = `${post}`;
 	speaker.appendChild(pg);
+}
+
+function imgBuilder(url, altText) {
+	var img = document.createElement('img');
+	img.setAttribute('src', url);
+	img.setAttribute('alt', altText);
+	therapist.appendChild(img);
 }
 
 function unnecessaryDiscomfort() {
@@ -65,7 +81,9 @@ function generalResponse() {
 function responserator() {
 	var responseObject = {
 		rude: messageCount > 7 ? countKeysAndBeRude : null,
-		anger: patientInput.value === patientInput.value.toUpperCase() ? angerParser : null,
+		sad: new RegExp('sad').test(patientInput.value) ? sadParser : null,
+		anger: patientInput.value.indexOf('angry') !== -1 ? angryParser : null,
+		yelling: patientInput.value === patientInput.value.toUpperCase() ? yellParser : null,
 		randResponse: generalResponse
 	};
 	for (var key of Object.keys(responseObject)) {
