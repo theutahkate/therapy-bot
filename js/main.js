@@ -5,21 +5,15 @@ const therapist = document.querySelector('.therapist__pane'),
 var messageCount = 0,
 	keyStrokes = 0;
 
-(function greeting() {
-	therapist.innerHTML = '<p>Good Afternoon. How do you feel today?</p>';
-})();
-
 function countKeysAndBeRude() {
-	patientInput.addEventListener('keyup', function() {
-		if (keyStrokes > 10) {
-			document.querySelector('.chat__container').innerHTML = "<p>I'm afraid that's all the time we have for today.</p>";
-			document.querySelector('.chat__container').setAttribute("class", "game-over");
-			patientInput.setAttribute("disabled", "true");
-			patientSubmit.setAttribute("disabled", "true");
-		} else {
-			keyStrokes++;
-		}
-	})
+	if (keyStrokes > 10) {
+		document.querySelector('.chat__container').innerHTML = "<p>I'm afraid that's all the time we have for today.</p>";
+		document.querySelector('.chat__container').setAttribute("class", "game-over");
+		patientInput.setAttribute("disabled", "true");
+		patientSubmit.setAttribute("disabled", "true");
+	} else {
+		keyStrokes++;
+	}
 }
 
 function sadParser() {
@@ -81,7 +75,6 @@ function generalResponse() {
 
 function responserator() {
 	var responseObject = {
-		rude: messageCount > 7 ? countKeysAndBeRude : null,
 		sad: new RegExp('sad').test(patientInput.value) ? sadParser : null,
 		anger: patientInput.value.indexOf('angry') !== -1 ? angryParser : null,
 		yelling: patientInput.value === patientInput.value.toUpperCase() ? yellParser : null,
@@ -95,6 +88,12 @@ function responserator() {
 		}
 	}
 }
+
+patientInput.addEventListener('keyup', function() {
+	if (messageCount >= 7) {
+		countKeysAndBeRude()
+	}
+})
 
 patientSubmit.addEventListener('click', function() {
 	event.preventDefault();
