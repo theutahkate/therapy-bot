@@ -63,6 +63,7 @@ function unnecessaryDiscomfort() {
 			postBuilder(therapist, 'Interesting.');
 	  }
 	}, 1000);
+	return '...'
 }
 
 function generalResponse() {
